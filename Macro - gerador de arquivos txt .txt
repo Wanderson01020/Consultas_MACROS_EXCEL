@@ -1,0 +1,72 @@
+Dim NumLinhas As String
+Sub AjusteRegistro07()
+'Ajusta as fórmulas da planilha na Aba(Registro 07) de acordo com o total de linhas
+
+NumLinhas = Planilha1.Cells(1, 8).Value
+    Sheets("Registro 07").Select
+    Range("A1").Select
+    ActiveCell.Offset(2, 0).Rows("1:1").EntireRow.Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.ClearContents
+    ActiveCell.Offset(-1, 0).Rows("1:1").EntireRow.Select
+    Selection.Copy
+    Range("A2: A" & NumLinhas).Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    Range("A1").Select
+    
+Call AjusteNovosRegistros
+
+End Sub
+Sub AjusteNovosRegistros()
+' Ajusta as fórmulas da planilha na Aba(Novos registros) de acordo com o total de linhas da aba (Registro 07)
+
+    NumLinhas = Planilha1.Cells(1, 8).Value
+    Sheets("Novos registros").Select
+    Range("Tabela_fat_inad_LF[[#Headers],[Descontos]]").Select
+    ActiveCell.Offset(1, 0).Range("Tabela_fat_inad_LF[[#Headers],[Concatenar]]"). _
+        Select
+    Range(Selection, Selection.End(xlToRight)).Select
+    Selection.Copy
+    Range("V2: AA" & NumLinhas).Select
+    ActiveSheet.Paste
+    Selection.End(xlToRight).Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Range("Tabela_fat_inad_LF[[#Headers],[CNPJ]]").Select
+    Range("I2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    Sheets("Registro 07").Select
+    Range("N1").Select
+    
+Call BlocoNotas
+
+End Sub
+Sub BlocoNotas()
+'Salva o arquivo em um (Blocos de notas) o endereço da pasta fica na Célula (C1) na planilha (Registro 07) no Arquivo (Modelagem de Baixas - Geral.xlsx)
+
+    Open Range("C1").Value For Output As 1
+    
+    Range("N1").Select
+    Do While ActiveCell.Value <> ""
+        Print #1, ActiveCell.Value
+        Cells(ActiveCell.Row + 1, ActiveCell.Column).Select
+    Loop
+    Range("A2").Select
+    ' MsgBox "Arquivo Gerado", vbInformation, "OK"
+    Close 1
+
+Call SaveAndClose
+
+End Sub
+Sub SaveAndClose()
+'ActiveWorkbook.Close SaveChanges:=True
+
+Application.DisplayAlerts = False
+ActiveWorkbook.Save
+Application.Quit
+Application.DisplayAlerts = True
+
+End Sub
