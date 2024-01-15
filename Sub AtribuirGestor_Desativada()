@@ -1,0 +1,119 @@
+Sub AtribuirGestor_Desativada()
+   
+'Aba que está a Variável
+    Sheets("GESTORES").Select
+    Dim Linha As Long
+
+
+    'CÓDIGO PARA MELHORAR DESEMPENHO DA MACRO
+    'ABERTURA DO CÓDIGO
+     Application.ScreenUpdating = False
+     Application.Calculation = xlCalculationAutomatic
+     Application.EnableEvents = False
+     
+'Limpa o Filtro de atribuição de Gestores na aba (GESTORES)
+    
+    Range("FILTRO_CNPJ[CNPJ]").Select
+    Selection.ClearContents
+    ActiveSheet.ListObjects("FILTRO_CNPJ").Resize Range("$S$3:$S$4")
+     
+
+'Para limpar o Filtro da tabela caso tenha pelo menos 1 filtro, se não a macro da erro
+
+    Sheets("BASECONSULTA").Select
+    Range("BASECONSULTA[[#Headers],[TIPO DE CADASTRO]]").Select
+    Selection.AutoFilter
+    Selection.AutoFilter
+
+'Verificar se tem venda nova, se não tiver finaliza a MACRO
+
+    Application.GoTo Reference:="BASECONSULTA"
+    ActiveSheet.ListObjects("BASECONSULTA").Range.AutoFilter Field:=9, _
+        Criteria1:="SEM GESTOR ATRIBUÍDO"
+        Range("BASECONSULTA").Select
+        On Error GoTo NoBlanks
+                    Selection.SpecialCells(xlCellTypeVisible).Select
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'Atribuir Gestores copiando o CNPJ da (BASECONSULTA) para a Aba (GESTORES)
+  'Tratamento feito na taleba "FILTRO_CNPJ" para pegar CNPJ únicos e cópia e cola na tabela "GESTOR_INICIAL"
+
+            Range("BASECONSULTA[CNPJ]").Select
+            Selection.Copy
+            
+            Sheets("GESTORES").Select
+            Range("FILTRO_CNPJ[CNPJ]").Select
+            Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                :=False, Transpose:=False
+                
+            ' Variável para selecionar campos de células
+            
+                Linha = Range("S2").Value
+  
+             'Atribuir Gestores na Tabela "GESTORES"
+            
+                Range("U2:U" & Linha).Select
+                Selection.Copy
+                Range("GESTOR_INICIAL[[#Headers],[CNPJ]]").Select
+                Selection.End(xlDown).Select
+                ActiveCell.Offset(1, 0).Range("A1").Select
+                Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+
+
+                    
+            'Formula para atribuír Gestor na tabela "GESTOR_INICIAL"
+                ActiveCell.Offset(0, 1).Range("A1:A" & Linha - 1).Select
+                Selection.FormulaLocal = "=SEERRO(SE([@CNPJ]="""";"""";" & _
+                                            "SE(OU(DESLOC([@GESTOR];-1;0)="""";DESLOC([@GESTOR];-1;0)=$E$3);" & _
+                                            "SE($F$4=""Ausente"";PROCX(""Presente"";$F$4:$F$9;$E$4:$E$9);$E$4);" & _
+                                            "SE(OU(DESLOC([@GESTOR];-1;0)="""";DESLOC([@GESTOR];-1;0)=$E$4);" & _
+                                            "SE($F$5=""Ausente"";PROCX(""Presente"";$F$5:$F$9;$E$5:$E$9);$E$5);" & _
+                                            "SE(OU(DESLOC([@GESTOR];-1;0)="""";DESLOC([@GESTOR];-1;0)=$E$5);" & _
+                                            "SE($F$6=""Ausente"";PROCX(""Presente"";$F$6:$F$9;$E$6:$E$9);$E$6);" & _
+                                            "SE(OU(DESLOC([@GESTOR];-1;0)="""";DESLOC([@GESTOR];-1;0)=$E$6);" & _
+                                            "SE($F$7=""Ausente"";PROCX(""Presente"";$F$7:$F$9;$E$7:$F$9);$E$7);" & _
+                                            "SE(OU(DESLOC([@GESTOR];-1;0)="""";DESLOC([@GESTOR];-1;0)=$E$7);" & _
+                                            "SE($F$8=""Ausente"";PROCX(""Presente"";$F$8:$F$9;$E$8:$E$9);$E$8);" & _
+                                            "SE(OU(DESLOC([@GESTOR];-1;0)="""";DESLOC([@GESTOR];-1;0)=$E$8);" & _
+                                            "SE($F$9=""Ausente"";PROCX(""Presente"";$F$3:$F$8;$E$3:$E$8);$E$9);" & _
+                                            "SE(OU(DESLOC([@GESTOR];-1;0)="""";DESLOC([@GESTOR];-1;0)=$E$9);" & _
+                                            "SE($F$3=""Ausente"";PROCX(""Presente"";$F$4:$F9;$E$4:$E$9);$E$3)))))))));" & _
+                                            "$E$3)" & _
+                                            ""
+                Selection.Copy
+                Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+                    
+            'Data da alteração
+                ActiveCell.Offset(0, 1).Range("A1:A" & Linha - 1).Select
+                Selection.FormulaLocal = "=SE([@CNPJ]<>"""";HOJE();"""")"
+                Selection.Copy
+                Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+                Application.CutCopyMode = False
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+    'CÓDIGO PARA MELHORAR DESEMPENHO DA MACRO
+    'FECHAMENTO DO CÓDIGO
+    Application.ScreenUpdating = True
+    Application.EnableEvents = True
+    
+    'Limpa os Filtros da tabela
+
+    Sheets("BASECONSULTA").Select
+    Range("BASECONSULTA[[#Headers],[TIPO DE CADASTRO]]").Select
+    Selection.AutoFilter
+    Selection.AutoFilter
+    
+NoBlanks:
+End Sub
+
+Sub AtribuirGestor()
+
+    Sheets("BASECONSULTA").Select
+    
+End Sub
+
+

@@ -1,0 +1,141 @@
+Sub exportar()
+'
+' Macro1 Macro
+'
+
+'
+' Congelar tela e não aparecer alertas
+     Application.DisplayAlerts = False
+     Application.ScreenUpdating = False
+     
+    'Declaração variaveis
+    Dim caminho, gestor, arquivo, data As String
+    data = Range("L1").Value
+    caminho = Range("L5").Value & Range("M6").Value & "\"
+    gestor = Range("M6").Value
+    arquivo = gestor & " CAMPANHA - " & Range("L6").Value & " " & data
+    
+        Dim Msg, Style, Title, Help, Ctxt, Response, MyString
+        Msg = "A campanha que você selecionou é a " & Range("L6").Value & ". Deseja continuar?"    ' Define message.
+        Style = vbYesNo + vbCritical + vbDefaultButton2    ' Define buttons.
+        Title = "MsgBox Demonstration"    ' Define title.
+        Help = "DEMO.HLP"    ' Define Help file.
+        Ctxt = 1000    ' Define topic context.
+                ' Display message.
+        Response = MsgBox(Msg, Style, Title, Help, Ctxt)
+        If Response = vbYes Then    ' User chose Yes.
+            
+                ActiveSheet.Range("J17").AutoFilter Field:=20, Criteria1:=gestor
+                'ActiveSheet.Range("J17").AutoFilter Field:=19, Criteria1:="FATURADO"
+                                
+                Range("Relatório___Depósito_Siscobra[[#Headers],[Nome]:[Operação]]").Select
+                Range(Selection, Selection.End(xlDown)).Select
+                Selection.Copy
+                Workbooks.Add
+                ActiveSheet.Paste
+                Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+                Application.CutCopyMode = False
+            '    ChDir
+            '        caminho & arquivo & ".csv"_
+            '        , FileFormat:=xlCSV, CreateBackup:=False
+            
+                    With ActiveWorkbook
+                        .SaveAs Filename:= _
+                        caminho & arquivo & ".csv", _
+                        FileFormat:=xlCSV, CreateBackup:=False
+                    End With
+                ActiveWindow.Close
+                Range("M8").Select
+
+                
+                MsgBox "Planilha atualizada com sucesso!"
+    
+        Else    ' User chose No.
+            MyString = "No"    ' Perform some action.
+        End If
+End Sub
+
+
+
+Sub exportar_todos()
+'
+' Macro1 Macro
+'
+
+'
+' Congelar tela e não aparecer alertas
+     Application.DisplayAlerts = False
+     Application.ScreenUpdating = False
+     
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    Application.EnableEvents = False
+     
+      Dim Msg, Style, Title, Help, Ctxt, Response, MyString
+        Msg = "A campanha que você selecionou é a " & Range("L6").Value & ". Deseja continuar?"    ' Define message.
+        Style = vbYesNo + vbCritical + vbDefaultButton2    ' Define buttons.
+        Title = "MsgBox Demonstration"    ' Define title.
+        Help = "DEMO.HLP"    ' Define Help file.
+        Ctxt = 1000    ' Define topic context.
+                ' Display message.
+        Response = MsgBox(Msg, Style, Title, Help, Ctxt)
+        If Response = vbYes Then    ' User chose Yes.
+          
+          
+          
+     For Each gestor In Sheets("GESTORES").Range("R2:R7")
+     
+                       
+    'Declaração variaveis
+    Dim caminho, arquivo, data As String
+    data = Range("L1").Value
+    caminho = Range("L5").Value & gestor & "\"
+
+    arquivo = gestor & " CAMPANHA - " & Range("L6").Value & " " & data
+    
+       
+               
+                ActiveSheet.Range("J17").AutoFilter Field:=20, Criteria1:=gestor
+                ActiveSheet.Range("J17").AutoFilter Field:=19, Criteria1:="FATURADO"
+                                
+                Range("Relatório___Depósito_Siscobra[[#Headers],[Nome]:[Operação]]").Select
+                Range(Selection, Selection.End(xlDown)).Select
+                Selection.Copy
+                Workbooks.Add
+                ActiveSheet.Paste
+                Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+                Application.CutCopyMode = False
+            '    ChDir
+            '        caminho & arquivo & ".csv"_
+            '        , FileFormat:=xlCSV, CreateBackup:=False
+            
+                    With ActiveWorkbook
+                        .SaveAs Filename:= _
+                        caminho & arquivo & ".csv", _
+                        FileFormat:=xlCSV, CreateBackup:=False
+                    End With
+                ActiveWindow.Close
+                Range("M8").Select
+                
+                       
+        Next
+        
+        ActiveSheet.Range("J17").AutoFilter Field:=20
+                
+                
+              
+         MsgBox "Planilha atualizada com sucesso!"
+    
+        Else    ' User chose No.
+            MyString = "No"    ' Perform some action.
+        End If
+        
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+    Application.EnableEvents = True
+        
+        
+End Sub
+
