@@ -1,0 +1,349 @@
+Sub Analise_Formulas()
+
+    ' Aplicar formulas
+  ' Formulas Aplicadas da coluna B até E
+    Range("Base_Faturamento[[#Headers],[CÓD AGENTE EXPANSÃO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[CÓD AGENTE EXPANSÃO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=XLOOKUP([@[CÓD CONTRATO]],Base_Cadastros[CÓD CONTRATO],Base_Cadastros[CÓD AGENTE EXPANSÃO],""NOK"")"
+    
+    Range("Base_Faturamento[[#Headers],[CÓD CONCESSIONÁRIA]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[CÓD CONCESSIONÁRIA]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=XLOOKUP([@[CÓD CONTRATO]],Base_Cadastros[CÓD CONTRATO],Base_Cadastros[CÓD CONCESSIONÁRIA],""NOK"")"
+    
+    Range("Base_Faturamento[[#Headers],[CÓD AGENTE MASTER]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[CÓD AGENTE MASTER]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=XLOOKUP([@[CÓD CONTRATO]],Base_Cadastros[CÓD CONTRATO],Base_Cadastros[CÓD AGENTE MASTER],""NOK"")"
+ 
+    Range("Base_Faturamento[[#Headers],[CÓD AGENTE NEGÓCIO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[CÓD AGENTE NEGÓCIO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=XLOOKUP([@[CÓD CONTRATO]],Base_Cadastros[CÓD CONTRATO],Base_Cadastros[CÓD AGENTE NEGÓCIO],""NOK"")"
+    'Fim do 1º intervalo de formula
+    
+    ' Coluna L
+    Range("Base_Faturamento[[#Headers],[PLANO DE REMUNERAÇAO AGENTE]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[PLANO DE REMUNERAÇAO AGENTE]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=IF(XLOOKUP([@[CÓD CONTRATO]],Base_Cadastros[CÓD CONTRATO],Base_Cadastros[PLANO DE REMUNERAÇÃO AGENTE],""CADASTRAR"")=""Sem Regra"",0,IF(ISNUMBER(XLOOKUP([@[CÓD CONTRATO]],Base_Cadastros[CÓD CONTRATO],Base_Cadastros[PLANO DE REMUNERAÇÃO AGENTE],""CADASTRAR"")),XLOOKUP([@[CÓD CONTRATO]],Base_Cadastros[CÓD CONTRATO],Base_Cadastros[PLANO DE REMUNERAÇÃO AGENTE],""CADASTRAR""),IF(XLOOKUP([@[CÓD CONTRATO]],Base_Cadastros[CÓD CONTRATO],Base_Cadastros[PLANO DE REMUNERAÇÃO AGENTE],""CADASTRAR"")=""por faixa"",2,XLOOKUP([@[CÓD CONTRATO]],Base_Cadastros[CÓD CONTRATO],Base_Cadastros[PLANO DE REMUNERAÇÃO AGENTE],""CADASTRAR""))*1))"
+
+    ' Formulas Aplicadas da coluna O até Y
+    Range("Base_Faturamento[[#Headers],[FATURAMENTO LÍQUIDO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[FATURAMENTO LÍQUIDO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=ROUND([@[FATURAMENTO BRUTO]]-[@[CUSTOS DE INSUMOS]]-[@[JUROS E MULTA]],2)"
+    
+    Range("Base_Faturamento[[#Headers],[CUSTO DE DISPONIBILIZAÇÃO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[CUSTO DE DISPONIBILIZAÇÃO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=ROUND(XLOOKUP([@[COMPETENCIA / REFERENCIA]],CALENDARIO_IMPOSTOS[Referencia + Ciclo],CALENDARIO_IMPOSTOS[IMPOSTOS],""CADASTRAR IMPOSTO"")*[@[FATURAMENTO BRUTO]],2)"
+    
+    Range("Base_Faturamento[[#Headers],[RESULTADO LÍQUIDO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[RESULTADO LÍQUIDO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=ROUND([@[FATURAMENTO LÍQUIDO]]-[@[CUSTO DE DISPONIBILIZAÇÃO]]-[@[JUROS E MULTA]],2)"
+    
+    Range("Base_Faturamento[[#Headers],[RECEITA DISTRIBUIDOR]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[RECEITA DISTRIBUIDOR]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=ROUND(([@[RESULTADO LÍQUIDO]])*(1-VLOOKUP([@[CÓD CONCESSIONÁRIA]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!A:T,20,0)),2)"
+    
+    Range("Base_Faturamento[[#Headers],[RECEITA CONCESSIONÁRIA]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[RECEITA CONCESSIONÁRIA]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=ROUND(([@[RESULTADO LÍQUIDO]])*VLOOKUP([@[CÓD CONCESSIONÁRIA]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!A:T,20,0),2)"
+
+    
+    Range("Base_Faturamento[[#Headers],[% RECEITA CONCESSIONÁRIA]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[% RECEITA CONCESSIONÁRIA]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=[@[RECEITA CONCESSIONÁRIA]]/[@[FATURAMENTO BRUTO]]"
+    
+    Range("Base_Faturamento[[#Headers],[DEFINIÇÃO DE FAIXA DE PERCENTUAL]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[DEFINIÇÃO DE FAIXA DE PERCENTUAL]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=IF(OR([@[PLANO DE REMUNERAÇAO AGENTE]]=2,[@[PLANO DE REMUNERAÇAO AGENTE]]=0,[@[PLANO DE REMUNERAÇAO AGENTE]]=1,[@[PLANO DE REMUNERAÇAO AGENTE]]=5,[@[PLANO DE REMUNERAÇAO AGENTE]]=6,[@[PLANO DE REMUNERAÇAO AGENTE]]=""por faixa""),[@[RECEITA CONCESSIONÁRIA]],IF(AND([@[PLANO DE REMUNERAÇAO AGENTE]]=3,[@[RECEITA CONCESSIONÁRIA]]<=0),0,IF([@[PLANO DE REMUNERAÇAO AGENTE]]=3,""VCM"",IF([@[CÓD DISTRIBUIDOR]]=2,[@[RECEITA CONCESSIONÁRIA]],IF(OR([@[PLANO DE REMUNERAÇAO AGENTE]]=4,AND([@[PLANO DE REMUNERAÇAO AGENTE]]>0,[@[PLANO DE REMUNERAÇAO AGENTE]]<1)),[@[RESULTADO LÍQUIDO]],0)))))"
+
+    
+    Range("Base_Faturamento[[#Headers],[GANHO AGENTE DE NEGÓCIO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[GANHO AGENTE DE NEGÓCIO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=IFERROR(IF([@[CÓD AGENTE NEGÓCIO]]=0,"""",ROUND(IF([@[COMPETENCIA / REFERENCIA]]<201907,([@[RECEITA CONCESSIONÁRIA]]-[@[JUROS E MULTA]])*VLOOKUP([@[CÓD AGENTE NEGÓCIO]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!D:AC,26,0),IF([@[DEFINIÇÃO DE FAIXA DE PERCENTUAL]]=""VCM"",[@[VCM CONTRATO]]*VLOOKUP([@[CÓD AGENTE NEGÓCIO]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!D:AI,32,0),IF([@[PLANO DE REMUNERAÇAO AGENTE]]=3,[@[VCM CONTRATO]]*XLOOKUP([@[CÓD AGENTE NEGÓCIO]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!D:D,'Faixas por Referência'!AI:AI),IF(([@[DEFINIÇÃO DE FAIXA DE PERCENTUAL]]-[@[JUROS E MULTA]])<=0,0,IF(AND([@[PLANO DE REMUNERAÇAO AGENTE]]>0,[@[PLANO DE REMUNERAÇAO AGENTE]]<1),[@[DEFINIÇÃO DE FAIXA DE PERCENTUAL]]*[@[PLANO DE REMUNERAÇAO AGENTE]],([@[DEFINIÇÃO DE FAIXA DE PERCENTUAL]]-[@[JUROS E MULTA]])*VLOOKUP([@[CÓD AGENTE NEGÓCIO]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!D:AC,26,0)))))),2)),"""")"
+
+    
+    Range("Base_Faturamento[[#Headers],[GANHO AGENTE MASTER]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[GANHO AGENTE MASTER]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=IFERROR(IF(OR([@[CÓD AGENTE MASTER]]=0,[@[CÓD AGENTE MASTER]]="""",[@[CÓD AGENTE MASTER]]=""NOK""),"""",IF([@[TIPO DE VENDA]]=""Nosso GestorCard"",0,IF(OR(AND(XLOOKUP([@[CÓD AGENTE NEGÓCIO]],'Cad_Agentes de Negócio'!C:C,'Cad_Agentes de Negócio'!S:S,"""")=""Sim"",[@FILIAÇÃO]>=DATE(2021,8,1),[@[CÓD DISTRIBUIDOR]]=1),XLOOKUP([@[CÓD AGENTE NEGÓCIO]],'Cad_Agentes de Negócio'!C:C,'Cad_Agentes de Negócio'!S:S,"""")=""Não""),ROUND(IF([@[CÓD DISTRIBUIDOR]]=2,([@[RECEITA CONCESSIONÁRIA]]-[@[JUROS E MULTA]]),[@[RESULTADO LÍQUIDO]])*VLOOKUP([@[CÓD AGENTE MASTER]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!C:Z,24,0),2),""""))),"""")"
+
+    
+    Range("Base_Faturamento[[#Headers],[GANHO AGENTE DE EXPANSÃO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[GANHO AGENTE DE EXPANSÃO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=IF([@[CÓD AGENTE EXPANSÃO]]=""NOK"","""",ROUND([@[RECEITA DISTRIBUIDOR]]*VLOOKUP([@[CÓD AGENTE EXPANSÃO]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!B:W,22,0),2))"
+
+    Range("Base_Faturamento[[#Headers],[RETENÇÃO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[RETENÇÃO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=[@[CUSTOS DE INSUMOS]]+[@[CUSTO DE DISPONIBILIZAÇÃO]]"
+    ' Final do intervalo de formula coluna Y
+    
+    ' Formulas Aplicadas da coluna AA e AB
+    Range("Base_Faturamento[[#Headers],[VALOR PAGO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[VALOR PAGO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=SE(E([@[DATA PAGAMENTO]]<>"""";SOMASES(Receb_Smart[[#Tudo];[Valor Baixa]];Receb_Smart[[#Tudo];[Código]];[@[CNPJ/CPF CLIENTE]];Receb_Smart[[#Tudo];[Referências]];[@[COMPETENCIA / REFERENCIA]];Receb_Smart[[#Tudo];[CÓD DISTRIBUIDOR]];[@[CÓD DISTRIBUIDOR]])=0);0;SE(SOMASES(Receb_Smart[[#Tudo];[Valor Baixa]];Receb_Smart[[#Tudo];[Código]];[@[CNPJ/CPF CLIENTE]];Receb_Smart[[#Tudo];[Referências]];[@[COMPETENCIA / REFERENCIA]];Receb_Smart[[#Tudo];[CÓD DISTRIBUIDOR]];[@[CÓD DISTRIBUIDOR]])=0;"""";SOMASES(Receb_Smart[[#Tudo];[Valor Baixa]];Receb_Smart[[#Tudo];[Código]];[@[CNPJ/CPF CLIENTE]];Receb_Smart[[#Tudo];[Referências]];[@[COMPETENCIA / REFERENCIA]];Receb_Smart[[#Tudo];[CÓD DISTRIBUIDOR]];[@[CÓD DISTRIBUIDOR]])))"
+    
+    Range("Base_Faturamento[[#Headers],[DATA PAGAMENTO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[DATA PAGAMENTO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=IFERROR(XLOOKUP([@[CNPJ/CPF CLIENTE]]&[@[COMPETENCIA / REFERENCIA]]&TEXT([@[CÓD DISTRIBUIDOR]],""0""),Receb_Smart[concatenar],Receb_Smart[Data Depósito]),"""")"
+    ' Final do intervalo de formula coluna AB
+    
+    ' Formulas Aplicadas da coluna AD e AY
+    Range("Base_Faturamento[[#Headers],[MÊS]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[MÊS]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=DATE(LEFT([@[COMPETENCIA / REFERENCIA]],4),RIGHT([@[COMPETENCIA / REFERENCIA]],2),1)*1"
+    
+    Range("Base_Faturamento[[#Headers],[CONCESSIONÁRIA]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[CONCESSIONÁRIA]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=TEXT([@[CÓD CONCESSIONÁRIA]],""000"")&"" - ""&IFERROR(VLOOKUP([@[CÓD CONCESSIONÁRIA]],Cad_Concessionária!A:B,2,0),"""")"
+    
+    
+    Range("Base_Faturamento[[#Headers],[AGENTE]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[AGENTE]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=IFERROR(VLOOKUP([@[CÓD AGENTE NEGÓCIO]],'Cad_Agentes de Negócio'!A:B,2,0),[@[CÓD AGENTE NEGÓCIO]])"
+
+    
+    'Falar com LUIZ sobre o intervalo de célula da faixa por referência
+    Range("Base_Faturamento[[#Headers],[REPASSE AGENTE]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[REPASSE AGENTE]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=SE([@[VALOR PAGO]]="""";"""";" & _
+    "SE(E([@[PLANO DE REMUNERAÇAO AGENTE]]*1=3;([@[VALOR PAGO]]-[@RETENÇÃO])>0);[@[VCM CONTRATO]]*PROCV([@[CÓD AGENTE NEGÓCIO]]&[@[COMPETENCIA / REFERENCIA]];'Faixas por Referência'!$D:$AI;32;0);SE(SEERRO(SE([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]];[@[GANHO AGENTE DE NEGÓCIO]];" & _
+    "SE([@[REPASSE CONCESSIONÁRIA]]<=0;0;SE([@[VALOR PAGO]]<=[@RETENÇÃO];0;SE(E([@[PLANO DE REMUNERAÇAO AGENTE]]>0;[@[PLANO DE REMUNERAÇAO AGENTE]]<1);([@[VALOR PAGO]]-[@RETENÇÃO])*[@[PLANO DE REMUNERAÇAO AGENTE]];([@[VALOR PAGO]]-[@RETENÇÃO2])*PROCV([@[CÓD AGENTE NEGÓCIO]]&[@[COMPETENCIA / REFERENCIA]];'Faixas por Referência'!$D:$AC;26;0)))));"""")<0;0;SEERRO(SE([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]];[@[GANHO AGENTE DE NEGÓCIO]];SE([@[REPASSE CONCESSIONÁRIA]]<=0;0;SE([@[VALOR PAGO]]<=[@RETENÇÃO];0;SE(E([@[PLANO DE REMUNERAÇAO AGENTE]]>0;[@[PLANO DE REMUNERAÇAO AGENTE]]<1);([@[VALOR PAGO]]-[@RETENÇÃO])*[@[PLANO DE REMUNERAÇAO AGENTE]];([@[VALOR PAGO]]-[@RETENÇÃO2])*PROCV([@[CÓD AGENTE NEGÓCIO]]&[@[COMPETENCIA / REFERENCIA]];'Faixas por Referência'!$D:$AC;26;0)))));""""))))" & _
+    ""
+    
+    Range("Base_Faturamento[[#Headers],[REPASSE CONCESSIONÁRIA]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[REPASSE CONCESSIONÁRIA]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaR1C1 = _
+        "=IF([@[VALOR PAGO]]=""""," & Chr(10) & "IF(TODAY()<[@[DATA DE VENCIMENTO ORIGINAL]]+7,"""",IF(ISNUMBER(SEARCH(""IC3"",[@CONCESSIONÁRIA])),0,-[@RETENÇÃO])),IF([@[DATA PAGAMENTO]]>VLOOKUP([@[COMPETENCIA / REFERENCIA]],Calendário!C1:C4,4,0),[@[VALOR PAGO]],IF([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]],[@[RECEITA CONCESSIONÁRIA]],IF([@[VALOR PAGO" & _
+        "]]>=[@RETENÇÃO],([@[VALOR PAGO]]-[@RETENÇÃO])*VLOOKUP([@[CÓD CONCESSIONÁRIA]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!C[-33]:C[-14],20,0),[@[VALOR PAGO]]-[@RETENÇÃO]))))" & _
+        ""
+        
+    Range("Base_Faturamento[[#Headers],[RETENÇÃO2]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[RETENÇÃO2]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaR1C1 = "=[@RETENÇÃO]+[@[RECEITA DISTRIBUIDOR]]"
+    
+    
+    'Quando incluí novos "agentes de negocio" mudar o intervalo de células no "procv"
+    Range("Base_Faturamento[[#Headers],[EQUIPE]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[EQUIPE]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = _
+            "=IF([@[CÓD DISTRIBUIDOR]]=1,"""",IFERROR(IF(VLOOKUP([@AGENTE],'Cad_Agentes de Negócio'!$B$1:$C$352,2,0)=0,"""",VLOOKUP([@AGENTE],'Cad_Agentes de Negócio'!$B$1:$C$352,2,0)),""""))"
+
+    Range("Base_Faturamento[[#Headers],[Tabela]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[Tabela]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=VLOOKUP([@[CNPJ/CPF CLIENTE]],'Base Cadastros'!F:T,15,0)"
+    
+    Range("Base_Faturamento[[#Headers],[Valor em aberto]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[Valor em aberto]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaR1C1 = "=If([@[VALOR PAGO]]="""",[@[FATURAMENTO BRUTO]],"""")"
+    
+    Range("Base_Faturamento[[#Headers],[VALOR LIQUIDO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[VALOR LIQUIDO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=ARRED(SE([@[VALOR PAGO]]="""";[@[RECEITA CONCESSIONÁRIA]];[@[VALOR PAGO]]-[@[RETENÇÃO2]]);2)"
+    
+    Range("Base_Faturamento[[#Headers],[PAGAMENTO CONCESSIONÁRIA]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[PAGAMENTO CONCESSIONÁRIA]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=SE([@[VALOR PAGO]]="""";SE(HOJE()<[@[DATA DE VENCIMENTO ORIGINAL]]+7;"""";SE(ÉNÚM(LOCALIZAR(""IC3"";[@CONCESSIONÁRIA]));0;SE([@[COMPETENCIA / REFERENCIA]]=AN$1;-[@RETENÇÃO];"""")));SE([@[DATA PAGAMENTO]]>PROCV([@[COMPETENCIA / REFERENCIA]];Calendário!$A:$D;4;0);[@[VALOR PAGO]]-[@[RECEITA DISTRIBUIDOR]];SE([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]];[@[RECEITA CONCESSIONÁRIA]];SE([@[VALOR PAGO]]>=[@RETENÇÃO];([@[VALOR PAGO]]-[@RETENÇÃO])*PROCV([@[CÓD CONCESSIONÁRIA]]&[@[COMPETENCIA / REFERENCIA]];'Faixas por Referência'!A:T;20;0);[@[VALOR PAGO]]-[@RETENÇÃO]))))"
+    
+    Range("Base_Faturamento[[#Headers],[FILTRO PGTO REPASSE]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[FILTRO PGTO REPASSE]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=IF([@[DATA PAGAMENTO]]="""",1,IF(AND([@[DATA PAGAMENTO]]<=EOMONTH(DATE(LEFT($AN$1,4),RIGHT($AN$1,2)+1,1),0),[@[DATA PAGAMENTO]]>=DATE(LEFT($AN$1,4),RIGHT($AN$1,2)+1,1)),1,0))"
+    
+    Range("Base_Faturamento[[#Headers],[AGENTE EXPANSÃO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[AGENTE EXPANSÃO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=TEXT([@[CÓD AGENTE EXPANSÃO]],""000"")&"" - ""&IFERROR(VLOOKUP([@[CÓD AGENTE EXPANSÃO]],'Cad_Agentes de Expansão'!$A$2:$B$23,2,0),"""")"
+    
+    Range("Base_Faturamento[[#Headers],[PAGAMENTO AGENTE EXPANSÃO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[PAGAMENTO AGENTE EXPANSÃO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = _
+                            "=IF([@[CÓD CONCESSIONÁRIA]]=11,IF([@[VALOR PAGO]]="""",0,IF([@[VALOR PAGO]]<=[@RETENÇÃO],0,IFERROR(IF([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]],[@[RECEITA CONCESSIONÁRIA]]*VLOOKUP([@[CÓD AGENTE EXPANSÃO]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!$B:$W,22,0),([@[VALOR PAGO]]-[@RETENÇÃO]-[@[RECEITA DISTRIBUIDOR]])*(VLOOKUP([@[CÓD CONCESSIONÁRIA]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!A:T,20,0))*VLOOKUP([@[CÓD AGENTE EXPANSÃO]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!$B:$W,22,0)),0))),IF([@[VALOR PAGO]]="""",0,IF([@[VALOR PAGO]]" & _
+                            "<=[@RETENÇÃO],0,IFERROR(IF([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]],[@[RECEITA DISTRIBUIDOR]]*VLOOKUP([@[CÓD AGENTE EXPANSÃO]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!$B:$W,22,0),([@[VALOR PAGO]]-[@RETENÇÃO])*(1-VLOOKUP([@[CÓD CONCESSIONÁRIA]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!A:T,20,0))*VLOOKUP([@[CÓD AGENTE EXPANSÃO]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!$B:$W,22,0)),0))))" & _
+                            ""
+    
+    Range("Base_Faturamento[[#Headers],[AGENTE MASTER]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[AGENTE MASTER]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=TEXT([@[CÓD AGENTE MASTER]],""000"")&"" - ""&IFERROR(VLOOKUP([@[CÓD AGENTE MASTER]],'Cad_Agentes Master'!$A$2:$B$20,2,0),"""")"
+
+    
+    Range("Base_Faturamento[[#Headers],[PAGAMENTO AGENTE MASTER]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[PAGAMENTO AGENTE MASTER]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Formula = "=IF([@[AGENTE MASTER]]="" - "",0,IF([@[VALOR PAGO]]="""",0,IF([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]],[@[GANHO AGENTE MASTER]],IF([@[REPASSE CONCESSIONÁRIA]]<=0,0,IF([@[VALOR PAGO]]<=[@RETENÇÃO],0,IF(OR(AND(XLOOKUP([@[CÓD AGENTE NEGÓCIO]],'Cad_Agentes de Negócio'!C:C,'Cad_Agentes de Negócio'!S:S,"""")=""Sim"",[@FILIAÇÃO]>=DATE(2021,8,1),[@[CÓD DISTRIBUIDOR]]=1),XLOOKUP([@[CÓD AGENTE NEGÓCIO]],'Cad_Agentes de Negócio'!C:C,'Cad_Agentes de Negócio'!S:S,"""")=""Não""),IF(([@[VALOR PAGO]]-[@RETENÇÃO2]-[@[GANHO AGENTE DE NEGÓCIO]])*VLOOKUP([@[CÓD AGENTE MASTER]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!C:Z,24,0)<0,0,([@[VALOR PAGO]]-[@RETENÇÃO2]-[@[GANHO AGENTE DE NEGÓCIO]])*VLOOKUP([@[CÓD AGENTE MASTER]]&[@[COMPETENCIA / REFERENCIA]],'Faixas por Referência'!C:Z,24,0)),0))))))"
+
+    
+    Range("Base_Faturamento[[#Headers],[DATA PAGAMENTO REPASSE AGN]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[DATA PAGAMENTO REPASSE AGN]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=SEERRO(PROCV([@[DATA PAGAMENTO]];DATA_PAGAMENTO[#Tudo];2;0);"""")"
+    
+    Range("Base_Faturamento[[#Headers],[CNPJ&REFERENCIA]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[CNPJ&REFERENCIA]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=+[@[CÓD CONTRATO]]&[@[COMPETENCIA / REFERENCIA]]"
+    
+    Range("Base_Faturamento[[#Headers],[% RENTABILIDADE DISTRIBUIDOR]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[% RENTABILIDADE DISTRIBUIDOR]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=([@[RECEITA CONCESSIONÁRIA]]+[@[RECEITA DISTRIBUIDOR]])/[@[FATURAMENTO BRUTO]]"
+    
+    Range("Base_Faturamento[[#Headers],[REPASSE DISTRIBUIDOR]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[REPASSE DISTRIBUIDOR]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=ARRED(SE([@[VALOR PAGO]]="""";0;SE([@[VALOR PAGO]]<=[@RETENÇÃO];0;([@[VALOR PAGO]]-[@RETENÇÃO])*(1-PROCV([@[CÓD CONCESSIONÁRIA]]&[@[COMPETENCIA / REFERENCIA]];'Faixas por Referência'!A:T;20;0))));2)"
+    
+    Range("Base_Faturamento[[#Headers],[FILIAÇÃO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[FILIAÇÃO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=PROCX([@[CÓD CONTRATO]];Base_Cadastros[CÓD CONTRATO];Base_Cadastros[DATA AFILIAÇÃO];"""")"
+    
+     Range("Base_Faturamento[[#Headers],[TIPO DE VENDA]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[TIPO DE VENDA]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=PROCX([@[CÓD CONTRATO]];Base_Cadastros[[#Tudo];[CÓD CONTRATO]];Base_Cadastros[[#Tudo];[tipo_venda]];"""")"
+    ' Final do intervalo de formula coluna AY
+    
+    ' Formulas Aplicadas da coluna AZ até BB
+    Range("Base_Faturamento[[#Headers],[Ano]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[Ano]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=ANO([@[DATA DE VENCIMENTO ORIGINAL]])"
+
+    Range("Base_Faturamento[[#Headers],[Cancelado?]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[Cancelado?]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=SE(PROCX([@[CÓD CONTRATO]];'Base Cadastros'!G:G;'Base Cadastros'!N:N);""Sim"";""Não"")"
+    
+    Range("Base_Faturamento[[#Headers],[Apuração por operação]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[Apuração por operação]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=SE([@[TIPO DE VENDA]]=""Nosso Gestorcard"";""GestorCard"";SE([@[CÓD DISTRIBUIDOR]]=1;""Veiculares"";""Connect""))"
+    
+    Range("Base_Faturamento[[#Headers],[REPASSE CBO]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[REPASSE CBO]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=SE(OU([@[Apuração por operação]]<>""GestorCard"";[@[DATA PAGAMENTO]]="""");0;" & _
+    "SE(SE([@[CÓD CONCESSIONÁRIA]]=1;SOMA(SE(ÉNÚM([@[VALOR PAGO]]);[@[VALOR PAGO]];0);SE(ÉNÚM([@RETENÇÃO]);" & _
+    "[@RETENÇÃO]*-1;0);SE(ÉNÚM([@[REPASSE AGENTE]]);[@[REPASSE AGENTE]]*-1;0);SE(ÉNÚM([@[PAGAMENTO AGENTE MASTER]]);" & _
+    "[@[PAGAMENTO AGENTE MASTER]]*-1;0))*17%;SE(E(DATA(ANO([@[DATA DE VENCIMENTO ORIGINAL]]);MÊS([@[DATA DE VENCIMENTO ORIGINAL]]);" & _
+    "1)=DATA(ANO(SE(ÉNÚM([@[DATA PAGAMENTO]]);[@[DATA PAGAMENTO]]*1;0));MÊS(SE(ÉNÚM([@[DATA PAGAMENTO]]);[@[DATA PAGAMENTO]]*1;0));1);" & _
+    "[@[VALOR PAGO]]<=[@[FATURAMENTO BRUTO]]);SOMA(SE(ÉNÚM([@[VALOR PAGO]]);[@[VALOR PAGO]];0);SE(ÉNÚM([@RETENÇÃO]);[@RETENÇÃO]*-1;0);" & _
+    "SE(ÉNÚM([@[PAGAMENTO CONCESSIONÁRIA]]);[@[PAGAMENTO CONCESSIONÁRIA]]*-1;0);SE(ÉNÚM([@[PAGAMENTO AGENTE EXPANSÃO]]);[@[PAGAMENTO AGENTE EXPANSÃO]]*-1;0))*17%;" & _
+    "SE(E(DATA(ANO([@[DATA DE VENCIMENTO ORIGINAL]]);MÊS([@[DATA DE VENCIMENTO ORIGINAL]]);1)<DATA(ANO(SE(ÉNÚM([@[DATA PAGAMENTO]]);[@[DATA PAGAMENTO]]*1;0));" & _
+    "MÊS(SE(ÉNÚM([@[DATA PAGAMENTO]]);[@[DATA PAGAMENTO]]*1;0));1);[@[VALOR PAGO]]<=[@[FATURAMENTO BRUTO]]);" & _
+    "SOMA(SE(ÉNÚM([@[VALOR PAGO]]);[@[VALOR PAGO]];0);SE(ÉNÚM([@RETENÇÃO]);[@RETENÇÃO]*-1;0);" & _
+    "SE(ÉNÚM([@[RECEITA CONCESSIONÁRIA]]);[@[RECEITA CONCESSIONÁRIA]]*-1;0);SE(ÉNÚM([@[PAGAMENTO AGENTE EXPANSÃO]]);[@[PAGAMENTO AGENTE EXPANSÃO]]*-1;0))*17%;" & _
+    "SOMA(SE(ÉNÚM([@[FATURAMENTO BRUTO]]);[@[FATURAMENTO BRUTO]];0);SE(ÉNÚM([@RETENÇÃO]);[@RETENÇÃO]*-1;0);SE(ÉNÚM([@[RECEITA CONCESSIONÁRIA]]);" & _
+    "[@[RECEITA CONCESSIONÁRIA]]*-1;0);SE(ÉNÚM([@[PAGAMENTO AGENTE EXPANSÃO]]);[@[PAGAMENTO AGENTE EXPANSÃO]]*-1;0))*17%)))" & _
+    "<0;0;SE([@[CÓD CONCESSIONÁRIA]]=1;SOMA(SE(ÉNÚM([@[VALOR PAGO]]);[@[VALOR PAGO]];0);SE(ÉNÚM([@RETENÇÃO]);[@RETENÇÃO]*-1;0);SE(ÉNÚM([@[REPASSE AGENTE]]);" & _
+    "[@[REPASSE AGENTE]]*-1;0);SE(ÉNÚM([@[PAGAMENTO AGENTE MASTER]]);[@[PAGAMENTO AGENTE MASTER]]*-1;0))*17%;" & _
+    "SE(E(DATA(ANO([@[DATA DE VENCIMENTO ORIGINAL]]);MÊS([@[DATA DE VENCIMENTO ORIGINAL]]);1)=DATA(ANO(SE(ÉNÚM([@[DATA PAGAMENTO]]);[@[DATA PAGAMENTO]]*1;0));" & _
+    "MÊS(SE(ÉNÚM([@[DATA PAGAMENTO]]);[@[DATA PAGAMENTO]]*1;0));1);[@[VALOR PAGO]]<=[@[FATURAMENTO BRUTO]]);" & _
+    "SOMA(SE(ÉNÚM([@[VALOR PAGO]]);[@[VALOR PAGO]];0);SE(ÉNÚM([@RETENÇÃO]);[@RETENÇÃO]*-1;0);SE(ÉNÚM([@[PAGAMENTO CONCESSIONÁRIA]]);[@[PAGAMENTO CONCESSIONÁRIA]]*-1;0);" & _
+    "SE(ÉNÚM([@[PAGAMENTO AGENTE EXPANSÃO]]);[@[PAGAMENTO AGENTE EXPANSÃO]]*-1;0))*17%;SE(E(DATA(ANO([@[DATA DE VENCIMENTO ORIGINAL]]);MÊS([@[DATA DE VENCIMENTO ORIGINAL]]);1)<DATA(ANO(SE(ÉNÚM([@[DATA PAGAMENTO]]);[@[DATA PAGAMENTO]]*1;0));" & _
+    "MÊS(SE(ÉNÚM([@[DATA PAGAMENTO]]);[@[DATA PAGAMENTO]]*1;0));1);[@[VALOR PAGO]]<=[@[FATURAMENTO BRUTO]]);" & _
+    "SOMA(SE(ÉNÚM([@[VALOR PAGO]]);[@[VALOR PAGO]];0);SE(ÉNÚM([@RETENÇÃO]);[@RETENÇÃO]*-1;0);SE(ÉNÚM([@[RECEITA CONCESSIONÁRIA]]);[@[RECEITA CONCESSIONÁRIA]]*-1;0);" & _
+    "SE(ÉNÚM([@[PAGAMENTO AGENTE EXPANSÃO]]);[@[PAGAMENTO AGENTE EXPANSÃO]]*-1;0))*17%;" & _
+    "SOMA(SE(ÉNÚM([@[FATURAMENTO BRUTO]]);[@[FATURAMENTO BRUTO]];0);SE(ÉNÚM([@RETENÇÃO]);[@RETENÇÃO]*-1;0);SE(ÉNÚM([@[RECEITA CONCESSIONÁRIA]]);[@[RECEITA CONCESSIONÁRIA]]*-1;0);SE(ÉNÚM([@[PAGAMENTO AGENTE EXPANSÃO]]);[@[PAGAMENTO AGENTE EXPANSÃO]]*-1;0))*17%)))))" & _
+    ""
+    ' Final do intervalo de formula coluna BC
+    
+    
+    'Coluna BD
+    Range("Base_Faturamento[[#Headers],[Base_Calculo(Repasse)]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[Base_Calculo(Repasse)]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaR1C1 = _
+        "=IF(AND([@[PLANO DE REMUNERAÇAO AGENTE]]=3,[@[VALOR PAGO]]>0),[@[VCM CONTRATO]]," & Chr(10) & "" & Chr(10) & "IF(IFERROR(IF(AND([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]],OR([@[PLANO DE REMUNERAÇAO AGENTE]]=0,[@[PLANO DE REMUNERAÇAO AGENTE]]>=1)),[@[RECEITA CONCESSIONÁRIA]]-[@[JUROS E MULTA]]," & Chr(10) & "IF(AND([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]],[@[PLANO DE REMUNERAÇAO AGENTE]]>0,[@[PLANO DE REMUNERAÇA" & _
+        "O AGENTE]]<1,[@[CÓD DISTRIBUIDOR]]=1),[@[RESULTADO LÍQUIDO]]," & Chr(10) & "IF(AND([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]],[@[PLANO DE REMUNERAÇAO AGENTE]]>0,[@[PLANO DE REMUNERAÇAO AGENTE]]<1),[@[RECEITA CONCESSIONÁRIA]]," & Chr(10) & "IF([@[REPASSE CONCESSIONÁRIA]]<=0,0," & Chr(10) & "IF([@[VALOR PAGO]]<=[@RETENÇÃO],0," & Chr(10) & "IF(AND([@[PLANO DE REMUNERAÇAO AGENTE]]>0,[@[PLANO DE REMUNERAÇAO AGENTE]]<1),[@[VALOR " & _
+        "PAGO]]-[@RETENÇÃO],([@[VALOR PAGO]]-[@RETENÇÃO2]))))))),"""")<0,0," & Chr(10) & "" & Chr(10) & "IFERROR(IF(AND([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]],OR([@[PLANO DE REMUNERAÇAO AGENTE]]=0,[@[PLANO DE REMUNERAÇAO AGENTE]]>=1)),[@[RECEITA CONCESSIONÁRIA]]-[@[JUROS E MULTA]]," & Chr(10) & "IF(AND([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]],[@[PLANO DE REMUNERAÇAO AGENTE]]>0,[@[PLANO DE REMUNERAÇAO AGENTE]]<1,[@[C" & _
+        "ÓD DISTRIBUIDOR]]=1),[@[RESULTADO LÍQUIDO]]," & Chr(10) & "IF(AND([@[VALOR PAGO]]>=[@[FATURAMENTO BRUTO]],[@[PLANO DE REMUNERAÇAO AGENTE]]>0,[@[PLANO DE REMUNERAÇAO AGENTE]]<1),[@[RECEITA CONCESSIONÁRIA]]," & Chr(10) & "IF([@[REPASSE CONCESSIONÁRIA]]<=0,0," & Chr(10) & "IF([@[VALOR PAGO]]<=[@RETENÇÃO],0," & Chr(10) & "IF(AND([@[PLANO DE REMUNERAÇAO AGENTE]]>0,[@[PLANO DE REMUNERAÇAO AGENTE]]<1),([@[VALOR PAGO]]-[@RETENÇÃ" & _
+        "O])," & Chr(10) & "" & Chr(10) & "([@[VALOR PAGO]]-[@RETENÇÃO2]))))))),"""")))" & _
+        ""
+        
+   Range("Base_Faturamento[[#Headers],[%DO_REPASSE]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[%DO_REPASSE]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=SEERRO([@[REPASSE AGENTE]]/[@[Base_Calculo(Repasse)]];"""")"
+    
+    Range("Base_Faturamento[[#Headers],[Atualização mais Recente]]").Select
+    ActiveCell.Offset(1, 0).Range("A1").Select
+    Range("Base_Faturamento[Atualização mais Recente]").Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.FormulaLocal = "=AGORA()"
+End Sub
+

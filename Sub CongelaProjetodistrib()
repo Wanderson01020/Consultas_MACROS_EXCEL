@@ -1,0 +1,65 @@
+Sub CongelaProjetodistrib()
+' Clica na planilha do Projeto distrib
+        Windows("DashBoard - Projeto Distribuidor 3.0.xlsm").Activate
+        Sheets("Base Faturamento").Select
+        Range("A3").Activate
+        
+' Congelar tela e não aparecer alertas
+        Application.DisplayAlerts = False
+        Application.ScreenUpdating = False
+        
+        'Declara a variável que conta to total de linha que a Planilha tem
+            Range("G1").FormulaLocal = "=CONT.VALORES(G2:G1048576)+1"
+            Range("G1").Copy
+            Range("G1").Select
+            Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+            linha = Range("G1").Value
+
+        'Congela colunas
+            Range("B3:E" & linha).Select
+            Selection.Copy
+            Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+           
+        'Congela coluna
+            Range("L3:L" & linha).Select
+            Selection.Copy
+            Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+        
+        'Congela colunas
+            Range("O3:Y" & linha).Select
+            Selection.Copy
+            Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+        
+        'Congela colunas
+            Range("AA3:AB" & linha).Select
+            Selection.Copy
+            Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+       
+        'Congela colunas
+            Range("AD3:AM" & linha).Select
+            Selection.Copy
+            Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+                    
+         'Congela colunas
+            Range("AN3:BB" & linha).Select
+            Selection.Copy
+            Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+                    
+         'Congela colunas
+            Range("BC3:BE" & linha).Select
+            Selection.Copy
+            Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+                    :=False, Transpose:=False
+                    
+                    
+            Application.CutCopyMode = False
+
+    End Sub
+
